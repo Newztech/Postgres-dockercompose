@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: percona/percona-distribution-postgresql:17-multi
+    container_name: postgres_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - /root/dba/postgres/data:/var/lib/postgresql/data
+    env_file:
+      - /root/dba/postgres/.env
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - postgres_network
+
+networks:
+  postgres_network:
+    name: postgres_network
+    driver: bridge
